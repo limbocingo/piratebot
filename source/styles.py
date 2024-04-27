@@ -1,4 +1,5 @@
 from enum import Enum
+from datetime import datetime
 
 
 class Color(Enum):
@@ -7,6 +8,7 @@ class Color(Enum):
     """
 
     RESET = '\033[0m'
+
     BLACK = '\033[30m'
     RED = '\033[31m'
     GREEN = '\033[32m'
@@ -15,6 +17,7 @@ class Color(Enum):
     MAGENTA = '\033[35m'
     CYAN = '\033[36m'
     WHITE = '\033[37m'
+
     DARK_GRAY = '\033[90m'
     BOLD_BLACK = '\033[1;30m'
     BOLD_RED = '\033[1;31m'
@@ -24,17 +27,20 @@ class Color(Enum):
     BOLD_MAGENTA = '\033[1;35m'
     BOLD_CYAN = '\033[1;36m'
     BOLD_WHITE = '\033[1;37m'
+    BOLD_DARK_GRAY = '\033[1;90m'
+
 
 class Log:
     """
     Send styled logs into the console.
     """
 
-    def __init__(self, message) -> None:
+    def __init__(self, module: str, message: str) -> None:
         self.message = message
+        self.module = module
 
     def __prefix(self, value: str) -> str:
-        return f'{Color.DARK_GRAY.value}[{value}{Color.DARK_GRAY.value}]{Color.RESET}'
+        return f'{value}{Color.DARK_GRAY.value}{Color.RESET.value}'
 
     def information(self) -> None:
         """
@@ -42,5 +48,19 @@ class Log:
         """
 
         print(
-            self.__prefix(f'{Color.BOLD_BLUE}INFO'),
+            # Time
+            f'{Color.BOLD_DARK_GRAY.value}{
+                datetime.today().strftime("%Y-%m-%d %H:%M:%S")}',
+
+            # Prefix or Type
+            self.__prefix(f'{Color.BOLD_BLUE.value}INFO'),
+
+            # Module
+            f'    {Color.MAGENTA.value}{self.module}{Color.RESET.value}',
+
+            # Message
+            self.message,
+
+
+            Color.RESET.value
         )
