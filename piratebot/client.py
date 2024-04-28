@@ -5,7 +5,7 @@ import os
 import discord
 import discord.app_commands
 
-from source.styles import Color, Log
+from piratebot.logging import Color, Log
 
 
 class PirateBot(discord.Client):
@@ -20,15 +20,18 @@ class PirateBot(discord.Client):
         self.__add_commands()
 
     def __add_commands(self):
-        files = os.listdir('source/commands/')
+        files = os.listdir('piratebot/commands/')
         for file in files:
+            if len(file) <= 3:
+                continue
+
             if file[-3:] != '.py':
                 continue
 
             if file == '__init__.py':
                 continue
 
-            lib = importlib.import_module('source.commands.' + file[:-3])
+            lib = importlib.import_module('piratebot.commands.' + file[:-3])
             members = inspect.getmembers(lib)
 
             for name, member in members:
