@@ -15,7 +15,7 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
-    user = TextField(null=False, unique=True)
+    user = TextField(null=False)
     sold = IntegerField(null=False, default=0)
 
     category = ForeignKeyField(Category, field='name', on_delete='CASCADE')
