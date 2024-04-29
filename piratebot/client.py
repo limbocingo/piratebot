@@ -9,9 +9,6 @@ from piratebot.util.logging import Color, Log
 
 
 class PirateBot(discord.Client):
-    """
-    Client of the PirateBot bot.
-    """
 
     def __init__(self) -> None:
         super().__init__(intents=discord.Intents.all())
@@ -26,6 +23,9 @@ class PirateBot(discord.Client):
                 continue
 
             if not os.path.isdir('piratebot/commands/' + file):
+                continue
+            
+            if 'command.py' not in os.listdir('piratebot/commands/' + file):
                 continue
 
             lib = importlib.import_module(f'piratebot.commands.{file}.command')

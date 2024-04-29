@@ -3,9 +3,6 @@ import discord.app_commands
 
 
 class Channel(discord.app_commands.Group):
-    """
-    Channel options.
-    """
 
     def __init__(self, client: discord.Client):
         super().__init__(default_permissions=discord.Permissions(administrator=True))

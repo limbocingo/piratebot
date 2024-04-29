@@ -2,21 +2,19 @@ import discord
 import discord.app_commands
 import peewee
 
-from piratebot.commands.store.items import Category, Product
+from piratebot.commands.store.selectors import CategorySelector, ProductSelector
+from piratebot.commands.store.models import Category, Product   
 from piratebot.commands.store.views import StoreView
 
 from piratebot.util.messages import Messages
 
 
 class Store(discord.app_commands.Group):
-    """
-    Pirate Service store manager.
-    """
 
     add = discord.app_commands.Group(
         name="add", description="Add something into the store database.")
     remove = discord.app_commands.Group(
-        name="remove", description="Remove something into the store database.")
+        name="remove", description="Remove something from the store database.")
 
     def __init__(self, client: discord.Client):
         super().__init__(default_permissions=discord.Permissions(administrator=True))
@@ -27,19 +25,31 @@ class Store(discord.app_commands.Group):
         if len(Category.select().dicts()) <= 0:
             return await interaction.response.send_message(f'<:error:1233547139989114891> — no category found, create one first.', ephemeral=True)
 
-        embeded = discord.Embed(
-            title='🏛️ — Store',
-            description=Messages(['commands', 'store', 'setup']).get_string(),
-            color=discord.Color.gold()
+        await interaction.channel.send(
+            embed=discord.Embed(
+                title='🏛️ — Store',
+                description=Messages(['commands', 'store', 'setup']).get_string(),
+                color=discord.Color.gold()
+            ), 
+            view=StoreView(
+                item=CategorySelector([
+                        discord.SelectOption(
+                            label='No Selection', 
+                            description='No selection currently made.', 
+                            default=True
+                        )
+                    ] + [
+                        discord.SelectOption(
+                            label=category['name'], 
+                            description=category['description'],
+                            emoji=interaction.guild.get_emoji(int(category['image']))
+                        )
+                        for category in Category.select().dicts()
+                    ]
+                )
+            )
         )
-
-        await interaction.channel.send(embed=embeded, view=StoreView(categories=[discord.SelectOption(label='No Selection', description='No selection currently made.', default=True)] + [
-            discord.SelectOption(
-                label=category['name'], description=category['description'],
-                emoji=interaction.guild.get_emoji(int(category['image'])))
-            for category in Category.select().dicts()
-        ]))
-        await interaction.response.send_message(f'<:management:1233543529847062600> — store sucessfully intialized!', ephemeral=True)
+        await interaction.response.send_message(f'<:management:1233543529847062600> — store sucessfully initialized!', ephemeral=True)
 
     #
     # Categories

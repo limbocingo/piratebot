@@ -3,7 +3,7 @@ import os
 from piratebot.client import PirateBot
 
 from piratebot.storage import database
-from piratebot.commands.store.items import Product, Category
+from piratebot.commands.store.models import Product, Category
 
 # All the models that are create have
 # to be registered in here.

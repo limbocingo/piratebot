@@ -15,7 +15,7 @@ class SoldProductButton(discord.ui.Button):
 
     def __init__(self, product: Product, emoji: discord.Emoji):
         super().__init__(style=discord.ButtonStyle.blurple,
-                         label=product.name,
+                         label='Sold',
                          emoji=emoji
                          )
         self.product = product
@@ -28,4 +28,15 @@ class SoldProductButton(discord.ui.Button):
             sold=self.product.sold + 1).where(Product.name == self.product.name)
         update.execute()
 
+        await interaction.channel.delete()
+
+class CloseProductButton(discord.ui.Button):
+
+    def __init__(self, emoji: discord.Emoji):
+        super().__init__(style=discord.ButtonStyle.gray,
+                         label='Close',
+                         emoji=emoji
+                         )    
+
+    async def callback(self, interaction: discord.Interaction) -> None:
         await interaction.channel.delete()

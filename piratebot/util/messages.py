@@ -39,6 +39,10 @@ class Messages:
         return message.format(**format) if format else message
 
     def get_content(self):
+        """
+        Get any content you want from the
+        messages file.
+        """
         with open(self.MESSAGES_FILE, encoding='utf8', mode='r') as fr:
             messages = json.load(fr)
 
