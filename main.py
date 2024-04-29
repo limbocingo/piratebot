@@ -1,9 +1,9 @@
 import os
 
-from piratebot.client import client
+from piratebot.client import PirateBot
 
 from piratebot.storage import database
-from piratebot.commands._store.items import Product, Category
+from piratebot.commands.store.items import Product, Category
 
 # All the models that are create have
 # to be registered in here.
@@ -21,7 +21,7 @@ def initialize():
     database.close()
 
     # Run the bot with the token specified in the ENV.
-    client.run(os.getenv('BOT_TOKEN'))
+    PirateBot().run(os.getenv('BOT_TOKEN'))
 
 
 if __name__ == '__main__':

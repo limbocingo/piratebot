@@ -1,6 +1,7 @@
 import peewee
 
-database = peewee.SqliteDatabase('./data.db')
+# Local database used to store all the user information.
+database = peewee.SqliteDatabase('./resources/pirateservice.db')
 
 
 class BaseModel(peewee.Model):

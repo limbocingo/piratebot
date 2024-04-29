@@ -2,8 +2,10 @@ import discord
 import discord.app_commands
 import peewee
 
-from piratebot.commands._store.items import Category, Product
-from piratebot.commands._store.items import StoreView
+from piratebot.commands.store.items import Category, Product
+from piratebot.commands.store.views import StoreView
+
+from piratebot.util.messages import Messages
 
 
 class Store(discord.app_commands.Group):
@@ -27,32 +29,7 @@ class Store(discord.app_commands.Group):
 
         embeded = discord.Embed(
             title='🏛️ — Store',
-            description='''Welcome to the Pirate Service 97® Store.
-
-
-⁍ **What is this?**
-
-    Here you have all the products that we sell. Everything that we can offer
-    here it will be waiting for you to be bought.
-
-⁍ **How do I buy?**
-
-    First of all open the menu that is below this message, then select
-    any category that you want to see the products of and choose
-    the product you like the most and a thread will be openned inside this
-    same channel. Finally wait for someone of our staff to attend you.
-
-⁍ **Payment methods**
-
-    The payment methods we currently accept are the next:
-
-    » <:paypal:1233733969548415088> PayPal
-    » <:ethereum:1233733991354597496> Ethereum
-    » <:bitcoin:1233733977865584721> Bitcoin
-    » <:usd:1233733973188804721> USDC
-
-*When is treated with clients we follow the [Safety & Rules](https://discord.com/channels/1233089093617975386/1233100415231590481/1233717081342611487).
-Its very recommended reading that before buying from us or doing a trade.*''',
+            description=Messages(['commands', 'store', 'setup']).get_string(),
             color=discord.Color.gold()
         )
 
