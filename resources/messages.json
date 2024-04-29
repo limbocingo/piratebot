@@ -48,8 +48,24 @@
             }
         },
         "contact": {
-            "ticket": [],
-            "setup": []
+            "ticket": [
+                "> <:newmember:1233543528320335932> · <@{demandant}>",
+                "",
+                "> <:info:1233543525585391616> · Description",
+                "{description}"
+            ],
+            "setup": [
+                "",
+                "⁍ **How it works?**",
+                "",
+                "If you want to get in contact with our team",
+                "you have to press the button that is below (`Get in Contact`)",
+                "",
+                "After that you'll have to enter some information and then a",
+                "thread will be created.",
+                "",
+                "*Once you create the ticket wait untill we respond to you.*"
+            ]
         }
     }
 }
