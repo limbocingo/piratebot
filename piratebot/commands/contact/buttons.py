@@ -10,7 +10,7 @@ class CloseButton(discord.ui.Button):
                          emoji=emoji
                          )
 
-    def has_admin(member: discord.Member) -> bool:
+    def has_admin(self, member: discord.Member) -> bool:
         for role in member.roles:
             if not role.permissions.administrator:
                 continue
