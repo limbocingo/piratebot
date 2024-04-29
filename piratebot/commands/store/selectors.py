@@ -44,7 +44,8 @@ class CategorySelector(discord.ui.Select):
                             description=product['description'],
                             emoji=interaction.guild.get_emoji(int(product['image'])))
                         for product in Product.select().where(
-                            Category.get(Category.name == self.values[0])
+                            Product.category == Category.get(
+                                Category.name == self.values[0])
                         ).dicts()
                     ])),
             ephemeral=True
@@ -92,7 +93,7 @@ class ProductSelector(discord.ui.Select):
 
         product = Product.get(Product.name == self.values[0])
         ticket = await self.create_ticket(interaction)
-        
+
         await interaction.guild.get_thread(ticket).send(
             embed=discord.Embed(
                 title=f'<:{interaction.guild.get_emoji(
