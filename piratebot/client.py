@@ -13,6 +13,8 @@ class PirateBot(discord.Client):
     def __init__(self) -> None:
         super().__init__(intents=discord.Intents.all())
 
+        print()
+
         self.tree = discord.app_commands.CommandTree(self)
         self.__add_commands()
 
@@ -24,7 +26,7 @@ class PirateBot(discord.Client):
 
             if not os.path.isdir('piratebot/commands/' + file):
                 continue
-            
+
             if 'command.py' not in os.listdir('piratebot/commands/' + file):
                 continue
 
@@ -43,12 +45,11 @@ class PirateBot(discord.Client):
                 Log('pirate.client', f'Command ({name})').information()
         print()
 
-    async def on_ready(self):
-        print()
-
+    async def setup_hook(self) -> None:
         Log('pirate.client', f'Booting up: {Color.GREEN.value}{
             self.application_id}').information()
 
         await self.tree.sync(guild=self.get_guild(1233089093617975386))
         Log('pirate.client', f'Synced with guild: {
             Color.GREEN.value}1233089093617975386').information()
+        print()

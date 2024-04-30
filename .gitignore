@@ -1,5 +1,6 @@
 # Files
 .env
+pirateservice.db
 
 # Folders
 __pycache__/

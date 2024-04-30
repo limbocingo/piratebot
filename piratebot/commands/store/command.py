@@ -18,6 +18,8 @@ class Store(discord.app_commands.Group):
         name="add", description="Add something into the store database.")
     remove = discord.app_commands.Group(
         name="remove", description="Remove something into the store database.")
+    edit = discord.app_commands.Group(
+        name="edit", description="Edit a category or product.")
 
     def __init__(self, client: discord.Client):
         super().__init__(default_permissions=discord.Permissions(administrator=True))
@@ -50,6 +52,10 @@ class Store(discord.app_commands.Group):
         return [discord.app_commands.Choice(name=category['name'], value=category['name'])
                 for category in Category.select().dicts()]
 
+    async def categories_fields(self, interaction: discord.Interaction, current: str):
+        return [discord.app_commands.Choice(name=field, value=field)
+                for field in list(Category._meta.columns.keys())]
+
     @ add.command(description='Add a category. The max of categories is 10.')
     @ discord.app_commands.describe(name="Name of the category.")
     @ discord.app_commands.describe(description="What is about.")
@@ -81,6 +87,23 @@ class Store(discord.app_commands.Group):
 
         await interaction.response.send_message(f'<:delete:1233543524264316969> — `{name}` deleted from `store` categories.', ephemeral=True)
 
+    @ edit.command(description='Edit a product.')
+    @ discord.app_commands.describe(name="Name of the product.")
+    @ discord.app_commands.describe(field='Field of the product you want to edit.')
+    @ discord.app_commands.describe(value='Value of the field.')
+    @ discord.app_commands.autocomplete(name=categories)
+    @ discord.app_commands.autocomplete(field=categories_fields)
+    async def product(self, interaction: discord.Interaction, name: str, field: str, value: str):
+        if field not in list(Category._meta.columns.keys()):
+            return await interaction.response.send_message(f'<:error:1233547139989114891> — `{name}` is not a valid name.', ephemeral=True)
+
+        (Category
+            .update(**{field: value})
+            .where(Category.name == name)
+            .execute())
+
+        await interaction.response.send_message(f'<:management:1233543529847062600> — `{field}` value changed to `{value}`.', ephemeral=True)
+
     #
     # Products
     #
@@ -89,6 +112,10 @@ class Store(discord.app_commands.Group):
         return [discord.app_commands.Choice(name=product['name'], value=product['name'])
                 for product in Product.select().dicts()]
 
+    async def products_fields(self, interaction: discord.Interaction, current: str):
+        return [discord.app_commands.Choice(name=field, value=field)
+                for field in list(Product._meta.columns.keys())]
+
     @ add.command(description='Add a product. The max of products is 10 per category.')
     @ discord.app_commands.describe(name="Name of the product.")
     @ discord.app_commands.describe(description="What is about.")
@@ -96,7 +123,7 @@ class Store(discord.app_commands.Group):
     @ discord.app_commands.describe(category="Category where you want to store the product.")
     @ discord.app_commands.autocomplete(category=categories)
     async def product(self, interaction: discord.Interaction, name: str, image: str, description: str, category: str):
-        if len(Product.select().dicts()) > 10:
+        if len(Product.select().where(Category == Category.get(name=category)).dicts()) > 10:
             return await interaction.response.send_message(f'<:error:1233547139989114891> — there are already `10` products.', ephemeral=True)
 
         if not Category.select().where(Category.name == category).exists():
@@ -126,3 +153,20 @@ class Store(discord.app_commands.Group):
         product.delete_instance()
 
         await interaction.response.send_message(f'<:delete:1233543524264316969> — `{name}` deleted from `store` categories.', ephemeral=True)
+
+    @ edit.command(description='Edit a product.')
+    @ discord.app_commands.describe(name="Name of the product.")
+    @ discord.app_commands.describe(field='Field of the product you want to edit.')
+    @ discord.app_commands.describe(value='Value of the field.')
+    @ discord.app_commands.autocomplete(name=products)
+    @ discord.app_commands.autocomplete(field=products_fields)
+    async def product(self, interaction: discord.Interaction, name: str, field: str, value: str):
+        if field not in list(Product._meta.columns.keys()):
+            return await interaction.response.send_message(f'<:error:1233547139989114891> — `{name}` is not a valid name.', ephemeral=True)
+
+        (Product
+            .update(**{field: value})
+            .where(Product.name == name)
+            .execute())
+
+        await interaction.response.send_message(f'<:management:1233543529847062600> — `{field}` value changed to `{value}`.', ephemeral=True)
