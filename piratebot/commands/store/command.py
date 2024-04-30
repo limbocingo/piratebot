@@ -87,13 +87,13 @@ class Store(discord.app_commands.Group):
 
         await interaction.response.send_message(f'<:delete:1233543524264316969> — `{name}` deleted from `store` categories.', ephemeral=True)
 
-    @ edit.command(description='Edit a product.')
-    @ discord.app_commands.describe(name="Name of the product.")
-    @ discord.app_commands.describe(field='Field of the product you want to edit.')
+    @ edit.command(description='Edit a category.')
+    @ discord.app_commands.describe(name="Name of the category.")
+    @ discord.app_commands.describe(field='Field of the category you want to edit.')
     @ discord.app_commands.describe(value='Value of the field.')
     @ discord.app_commands.autocomplete(name=categories)
     @ discord.app_commands.autocomplete(field=categories_fields)
-    async def product(self, interaction: discord.Interaction, name: str, field: str, value: str):
+    async def category(self, interaction: discord.Interaction, name: str, field: str, value: str):
         if field not in list(Category._meta.columns.keys()):
             return await interaction.response.send_message(f'<:error:1233547139989114891> — `{name}` is not a valid name.', ephemeral=True)
 
